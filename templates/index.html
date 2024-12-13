@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Prediction</title>
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Risk Prediction</h1>
+
+        <form id="predict-form">
+            <label for="age">Age:</label>
+            <input type="number" step="any" id="age" name="age" required>
+
+            <label for="systolic_bp">Systolic BP:</label>
+            <input type="number" step="any" id="systolic_bp" name="systolic_bp" required>
+
+            <label for="diastolic_bp">Diastolic BP:</label>
+            <input type="number" step="any" id="diastolic_bp" name="diastolic_bp" required>
+
+            <label for="bs">Blood Sugar (BS):</label>
+            <input type="number" step="any" id="bs" name="bs" required>
+
+            <label for="body_temp">Body Temperature:</label>
+            <input type="number" step="any" id="body_temp" name="body_temp" required>
+
+            <label for="heart_rate">Heart Rate:</label>
+            <input type="number" step="any" id="heart_rate" name="heart_rate" required>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predict-form').onsubmit = async function (e) {
+            e.preventDefault(); // Prevent the form from submitting the default way
+            const formData = new FormData(this); // Gather form data
+
+            try {
+                // Send the form data via POST request
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // Parse the response
+                const result = await response.json();
+
+                // Display the result
+                document.getElementById('result').innerText = result.error || `Prediction: ${result.prediction}`;
+            } catch (error) {
+                document.getElementById('result').innerText = 'An error occurred. Please try again.';
+            }
+        };
+    </script>
+</body>
+</html>
